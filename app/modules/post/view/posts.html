@@ -2,15 +2,45 @@
     <div class="page-header">
         <h1>Posts</h1>
     </div>
-    <ul>
-        <li ng-repeat="p in posts.posts">
+    <ul pagination fetch-next-results="posts.getNextPosts()">
+        <li ng-repeat="p in posts.posts track by $index">
             <article class="post">
-                <header class="post-header">
-                    <h2 class="post-title"><a ng-href="./#/posts/{{p.id}}">{{p.title}}</a></h2>
-                </header>
-                <section class="post-excerpt">
-                    <p>{{p.body}} <a class="read-more" ng-href="./#/posts/{{p.id}}">...read more</a></p>
-                </section>
+                <div class="left-side">
+                    <section class="info">
+                        <p class="data">{{p.Score}}</p>
+                        <p>Score</p>
+                    </section>
+                    <section class="info">
+                        <p class="data">{{p.AnswerCount}}</p>
+                        <p>Answers</p>
+                    </section>
+                    <section class="info">
+                        <p class="data"> {{p.ViewCount}}</p>
+                        <p>Views</p>
+                    </section>
+                </div>
+                <div class="right-side">
+                    <div class="t">
+                        <div class="b">
+                            <header class="post-header">
+                                <h3 class="post-title">
+                                <!-- <a ng-href="/posts/{{p.id}}"> -->
+                                {{p.Title}}
+                                <!-- </a> -->
+                                </h3>
+                            </header>
+                            <section class="tags">
+                                <div class="tag" ng-repeat="tag in p.Tags track by $index">{{tag}}</div>
+                            </section>
+                        </div>
+                        <div class="vote">
+                            <div class="up" ng-click="posts.voteUp(p)"></div>
+                            <p class="data"> {{p.Vote}}</p>
+                            <div class="down" ng-click="posts.voteDown(p)"></div>
+                        </div>
+                    </div>
+                    <p class="c-date">{{p.CreationDate}}</p>
+                </div>
             </article>
             <hr>
         </li>
