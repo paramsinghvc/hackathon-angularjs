@@ -340,3 +340,5 @@ import user from './modules/user';
 /*@ngInject*/
 angular.module('app', [home, post, comment, user]);
 ```
+=======
+# hackathon-angularjs
