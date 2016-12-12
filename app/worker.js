@@ -85,6 +85,48 @@ module.exports = function(self) {
         return d.slice(0, 10);
     }
 
+    self.getIDBCursor = function() {
+        return PostsDBPromise.then(db => {
+            let tx = db.transaction('posts', 'readwrite');
+            var postsStore = tx.objectStore('posts');
+            let cursor = postsStore.openCursor();
+            return cursor;
+        });
+    }
+
+    self.findById = function(post) {
+        return new Promise((resolve, reject) => {
+            self.getIDBCursor().then(function advanceCursor(cursor) {
+                console.log(cursor.value.Id, post.Id);
+
+                if (!cursor) {
+                    reject('err')
+                    return;
+                };
+                if (cursor.value.Id == post.Id) {
+                    resolve(cursor);
+                } else {
+                    cursor.continue().then(advanceCursor);
+                }
+            })
+
+        });
+    }
+
+    self.updateIDBField = function(post, increment) {
+        self.findById(post).then(cursor => {
+            let newVal = cursor.value;
+            if (increment) {
+                newVal.Vote += 1;
+            } else {
+                newVal.Vote -= 1;
+            }
+            cursor.update(newVal)
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
     self.addEventListener('message', function(e) {
         console.log(e);
         var data = e.data;
@@ -118,7 +160,9 @@ module.exports = function(self) {
                         payload: chartData
                     })
                 })
-
+                break;
+            case 'FIND_POST_BY_ID':
+                self.updateIDBField(data.payload, data.increment)
 
         }
     });

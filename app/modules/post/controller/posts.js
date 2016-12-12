@@ -23,6 +23,7 @@ export default class PostControllers {
         if (posts.length > 0) {
         	posts[0].Vote += 1;
         }
+        this.PostService.findPostInIDB(post, true);
     }
 
     voteDown(post) {
@@ -30,6 +31,7 @@ export default class PostControllers {
         if (posts.length > 0) {
         	posts[0].Vote -= 1;
         }
+        this.PostService.findPostInIDB(post, false);
     }
 
 }

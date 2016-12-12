@@ -2,7 +2,7 @@ const parseString = require('xml2js').parseString;
 
 import idb from 'idb';
 const PostsDBPromise = idb.open('hackathon', 1, upgradeDB => {
-    upgradeDB.createObjectStore('posts', {keyPath: 'Id'})
+    upgradeDB.createObjectStore('posts', { keyPath: 'Id' })
 });
 
 /*@ngInject*/
@@ -79,8 +79,12 @@ export default class PostService {
         })
     }
 
-    findPostInIDB(post) {
-
+    findPostInIDB(post, increment) {
+        appWorker.postMessage({
+            cmd: 'FIND_POST_BY_ID',
+            payload: post,
+            increment: increment
+        })
     }
 
     getPost(postId) {
